@@ -1,5 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/firebase";
+import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -9,17 +12,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "sonner";
+import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 import { userType } from "@/types";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   email: z
@@ -44,39 +44,11 @@ const Register = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const promise = createUserWithEmailAndPassword(
+      const promise = signInWithEmailAndPassword(
         auth,
         values.email,
         values.password
       ).then((response) => {
-        const user: userType = {
-          id: response.user.uid,
-          photo: response.user.photoURL!,
-          email: response.user.email!,
-          displayName: response.user.displayName!,
-        };
-        setUser(user);
-
-        // Getting user token
-        response.user.getIdToken().then((token) => {
-          setToken(token);
-        });
-      });
-      toast.promise(promise, {
-        loading: "Creating user...",
-        success: "User created successfully",
-        error: "Error creating user",
-      });
-      console.log(auth);
-    } catch (error) {
-      toast.error("Error creating user");
-    }
-  }
-
-  function handleGoogleSignIn() {
-    try {
-      const promise = signInWithPopup(auth, googleProvider).then((response) => {
-
         //Creating user model
         const user: userType = {
           id: response.user.uid,
@@ -93,12 +65,12 @@ const Register = () => {
       });
 
       toast.promise(promise, {
-        loading: "Creating user in...",
-        success: "User created successfully",
-        error: "Error creating user",
+        loading: "Signing in user...",
+        success: "User signed in successfully",
+        error: "Error signing in user",
       });
     } catch (error) {
-      toast.error("Error creating user");
+      toast.error("Error signing in user");
     }
   }
 
@@ -153,17 +125,13 @@ const Register = () => {
           />
           <div className="flex items-center justify-between">
             <span className=" text-sm">
-              Do you have an account?{" "}
-              <Link className=" text-red-400" href={"/login"}>
+              You don't have an account?{" "}
+              <Link className=" text-red-400" href={"/register"}>
                 Register
               </Link>
             </span>
             <Button type="submit">Submit</Button>
           </div>
-          <div className=" w-full h-[1px] bg-gray-700" />
-          <Button onClick={handleGoogleSignIn} className=" w-full bg-gray-700">
-            Register with Google
-          </Button>
         </form>
       </Form>
     </div>
