@@ -8,7 +8,7 @@ const token = getItem("token");
 interface AuthType {
   user: userType;
   token: string;
-  setUser: (user: userType) => void;
+  setUser: (user: userType | null) => void;
   setToken: (token: string) => void;
 }
 

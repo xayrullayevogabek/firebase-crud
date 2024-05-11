@@ -67,7 +67,13 @@ const Register = () => {
       toast.promise(promise, {
         loading: "Signing in user...",
         success: "User signed in successfully",
-        error: "Error signing in user",
+        error: (data) => {
+          if (data.code.includes("auth/invalid-credential")) {
+            return "Invalid email or password";
+          } else {
+            return "Error signing in user";
+          }
+        },
       });
     } catch (error) {
       toast.error("Error signing in user");

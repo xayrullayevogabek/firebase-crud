@@ -93,7 +93,7 @@ const Register = () => {
       });
 
       toast.promise(promise, {
-        loading: "Creating user in...",
+        loading: "Creating user...",
         success: "User created successfully",
         error: "Error creating user",
       });
@@ -155,7 +155,7 @@ const Register = () => {
             <span className=" text-sm">
               Do you have an account?{" "}
               <Link className=" text-red-400" href={"/login"}>
-                Register
+                Login
               </Link>
             </span>
             <Button type="submit">Submit</Button>
