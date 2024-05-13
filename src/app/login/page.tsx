@@ -57,7 +57,7 @@ const Register = () => {
           displayName: response.user.displayName!,
         };
         setUser(user);
-
+        
         // Getting user token
         response.user.getIdToken().then((token) => {
           setToken(token);

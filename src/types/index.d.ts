@@ -4,3 +4,10 @@ export interface userType {
   email: string;
   displayName: string;
 }
+
+export interface TodoType {
+  id: string;
+  date: string;
+  text: string;
+  status: string;
+}
