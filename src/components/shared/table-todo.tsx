@@ -8,31 +8,52 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TodoType } from "@/types";
+import { db } from "@/lib/firebase";
+import { deleteDoc, doc } from "firebase/firestore";
+import { toast } from "sonner";
 
 export function TableTodo({
   todos,
+  getData,
 }: {
   todos: TodoType[];
+  getData: () => void;
 }) {
+  const handleDelete = (id: string) => {
+    const ref = doc(db, "crud", id);
+    try {
+      const promise = deleteDoc(ref);
+      toast.promise(promise, {
+        loading: "Deleting todo...",
+        success: "Todo deleted successfully",
+        error: "Error deleting todo",
+      });
+      getData();
+    } catch (error) {
+      console.error("Error deleting todo", error);
+      toast.error("Error deleting todo");
+    }
+  };
+
   return (
     <Table className=" mt-5">
       <TableCaption>A list of your recent todos.</TableCaption>
       <TableHeader>
         <TableRow className=" border-b border-b-gray-700">
-          {/* <TableHead className=" text-white">Date</TableHead> */}
-          <TableHead className=" text-white">Status</TableHead>
           <TableHead className=" text-white">Text</TableHead>
+          <TableHead className=" text-white w-28">Status</TableHead>
           <TableHead className="text-right text-white">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {todos.map((todo) => (
           <TableRow className=" border-b border-b-gray-700 cursor-pointer">
-            {/* <TableCell className="font-medium py-5">
-              {todo.date.seconds}
-            </TableCell> */}
-            <TableCell>{todo.status}</TableCell>
             <TableCell>{todo.text}</TableCell>
+            <TableCell>
+              <div className=" bg-green-600/40 w-20 capitalize rounded-md p-1 text-center">
+                {todo.status}
+              </div>
+            </TableCell>
             <TableCell className="text-right">
               <button className=" mr-2">
                 <svg
@@ -50,7 +71,7 @@ export function TableTodo({
                   />
                 </svg>
               </button>
-              <button>
+              <button onClick={() => handleDelete(todo.id)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

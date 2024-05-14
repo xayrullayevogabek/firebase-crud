@@ -15,7 +15,6 @@ const CreateTodo = ({ getData }: { getData: () => void }) => {
   const handleClick = () => {
     if (value) {
       const promise = addDoc(ref, {
-        id: uuid(),
         status: "todo",
         text: value,
         date: new Date(),

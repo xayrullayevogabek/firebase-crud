@@ -21,7 +21,7 @@ export default function Home() {
 
   const getData = async () => {
     const res = await getDocs(ref);
-    const data = res.docs.map((doc) => ({ ...doc.data() }));
+    const data = res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     setTodos(data as TodoType[]);
   };
 
@@ -29,12 +29,18 @@ export default function Home() {
     getData();
   }, []);
 
-  console.log(todos);
-
   return (
     <div className=" container py-10">
       <CreateTodo getData={getData} />
-      <TableTodo todos={todos} />
+      {todos.length > 0 ? (
+        <TableTodo getData={getData} todos={todos} />
+      ) : (
+        <div className=" flex items-center justify-center h-[50vh]">
+          <h1 className=" text-2xl font-bold">
+            There is no any todos!
+          </h1>
+        </div>
+      )}
     </div>
   );
 }
