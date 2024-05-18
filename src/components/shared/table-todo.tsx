@@ -88,8 +88,8 @@ export function TableTodo({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {todos.map((todo) => (
-          <TableRow className=" border-b border-b-gray-700 cursor-pointer">
+        {todos.map((todo, indx) => (
+          <TableRow key={indx} className=" border-b border-b-gray-700 cursor-pointer">
             <TableCell>
               {todo.id === isEdit.id && isEdit.isEdit ? (
                 <Input
